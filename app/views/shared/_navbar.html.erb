@@ -1,5 +1,47 @@
-<div class="bg-white/10 p-3 flex items-center justify-center gap-4">
-  <%= link_to "Home", root_path, class: "hover:bg-white/10 px-3 py-1.5 rounded" %>
-  <%= link_to "Posts", posts_path, class: "hover:bg-white/10 px-3 py-1.5 rounded" %>
-  <%= link_to "+ Add Post", new_post_path, class: "hover:bg-white/10 px-3 py-1.5 rounded" %>
+<div class="bg-white/10 p-3 flex items-center justify-between">
+  <div class="flex items-center gap-4">
+    <%= link_to "Home", root_path, class: "hover:bg-white/10 px-3 py-1.5 rounded font-semibold" %>
+    <%= link_to "+Add Post", new_post_path, class: "hover:bg-white/10 px-3 py-1.5 rounded font-semibold" %>
+  </div>
+
+  <% if user_signed_in? %>
+    <div class="relative">
+      <button 
+        id="user-menu-button" 
+        class="size-10 flex items-center justify-center rounded-full bg-indigo-800 text-gray-200 text-lg"
+        onclick="document.getElementById('user-menu').classList.toggle('hidden')">
+        <%= current_user.username[0].upcase %>
+      </button>
+
+      <div 
+        id="user-menu"
+        class="hidden absolute right-0 mt-2 w-52 bg-neutral-800 rounded-lg shadow-lg text-gray-200">
+        <div class="px-2 py-2 flex items-center gap-2">
+        <div class="size-10 flex items-center justify-center rounded-full bg-indigo-800 text-gray-200 text-lg">
+        <%= current_user.username[0].upcase %></div>
+        <div>
+          <p class="font-semibold text-sm"><%= current_user.username %></p>
+          <p class="text-gray-500 text-sm"><%= current_user.email %></p>
+        </div>
+        </div>
+        <hr class="border-white/10">
+        <%= link_to "My Posts", my_posts_path, class: "block px-4 py-2 text-sm hover:bg-white/10" %>
+        <%= button_to "Sign out", destroy_user_session_path, method: :delete, data: {confirm: "Are you sure to sign out?"}, class: "block w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-red-600" %>
+      </div>
+    </div>
+  <% else %>
+    <%= link_to "Login", new_user_session_path, class: "bg-white/10 font-semibold px-3 py-1.5 rounded" %>
+  <% end %>
 </div>
+
+<script>
+document.addEventListener('click', function (event) {
+  const menu = document.getElementById('user-menu');
+  const button = document.getElementById('user-menu-button');
+
+  if (!menu.contains(event.target) && !button.contains(event.target)) {
+    menu.classList.add('hidden');
+  }
+});
+
+</script>

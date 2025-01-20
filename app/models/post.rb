@@ -1,5 +1,6 @@
 # post.rb
 class Post < ApplicationRecord
+    belongs_to :user
     has_one_attached :image
   
     validate :caption_or_image_present

@@ -2,23 +2,15 @@
 
 <div class="min-h-[calc(100vh-20vh)] flex items-center justify-center py-6">
   <div class="max-w-lg bg-white/10 rounded-md p-6">
-    <!-- Post Image Preview -->
-    <% if @post.image.attached? %>
-      <div class="w-full h-72 overflow-hidden rounded-md mb-4">
-        <%= image_tag @post.image, class: "w-full h-full object-cover object-center" %>
-      </div>
-    <% end %>
-
-    <!-- Post Caption -->
-    <p class="text-lg text-gray-200 mb-4"><%= @post.caption %></p>
-
-    <!-- Action Buttons -->
+          <%= render @post, caption: @post.caption %>
     <div class="flex items-center gap-2 mt-3 text-gray-200">
+    <% if @post.user == current_user %>
       <%= link_to "Edit", edit_post_path(@post), class: "flex-1 p-2 rounded-md bg-white/10 font-medium text-center" %>
       <%= button_to "Delete", @post, 
           method: :delete, 
           form: { class: "flex-1" },
           class: "w-full p-2 rounded-md bg-red-600/40 hover:bg-red-600 hover:text-white font-medium text-center" %>
+          <% end %>
     </div>
   </div>
 </div>

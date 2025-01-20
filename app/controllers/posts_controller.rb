@@ -1,10 +1,16 @@
 # posts_controller.rb
 class PostsController < ApplicationController
   before_action :set_post, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
 
   # GET /posts or /posts.json
   def index
     @posts = Post.all
+  end
+
+  def my_posts
+    @posts = current_user.posts
+    render :index
   end
 
   # GET /posts/1 or /posts/1.json
@@ -23,6 +29,7 @@ class PostsController < ApplicationController
   # POST /posts or /posts.json
   def create
     @post = Post.new(post_params)
+    @post.user = current_user 
 
     respond_to do |format|
       if @post.save
@@ -37,6 +44,7 @@ class PostsController < ApplicationController
 
   # PATCH/PUT /posts/1 or /posts/1.json
   def update
+    if @post.user == current_user
     respond_to do |format|
       if @post.update(post_params)
         format.html { redirect_to @post, notice: "Post was successfully updated." }
@@ -46,26 +54,32 @@ class PostsController < ApplicationController
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
+  else
+    redirect_to posts_path, alert: "You are not authorized to edit this post."
   end
+end
 
   # DELETE /posts/1 or /posts/1.json
   def destroy
+    if @post.user == current_user
     @post.destroy!
 
     respond_to do |format|
       format.html { redirect_to posts_path, status: :see_other, notice: "Post was successfully destroyed." }
       format.json { head :no_content }
     end
+  else
+    redirect_to posts_path, alert: "You are not authorized to delete this post."
   end
+end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
-      @post = Post.find(params.expect(:id))
+      @post = Post.find(params[:id])
     end
-
-    # Only allow a list of trusted parameters through.
+  
     def post_params
-      params.expect(post: [ :caption, :image ])
+      params.require(:post).permit(:caption, :image)
     end
-end
+  end
