@@ -1,0 +1,10 @@
+<% content_for :title, "Editing Post" %>
+
+<div class="min-h-[calc(100vh-20vh)] flex flex-col items-center py-6">
+<div class="bg-white/10 p-5 rounded-md max-w-lg">
+  <h1 class="font-bold text-3xl text-center text-white">Editing Post</h1>
+ <div>
+ <%= render "form", post: @post %>
+ </div>
+</div>
+</div>

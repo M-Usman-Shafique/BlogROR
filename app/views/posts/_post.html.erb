@@ -1,0 +1,7 @@
+<!-- _post.html.erb-->
+<% if post.image.attached? %>
+  <div class="w-full aspect-square overflow-hidden bg-neutral-600 rounded">
+    <%= image_tag post.image, class: "w-full h-full object-cover object-center" %>
+  </div>
+<% end %>
+<p class="mt-3"><%= caption %></p>

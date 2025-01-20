@@ -1,0 +1,60 @@
+<!-- _form.html.erb -->
+<%= form_with(model: post, class: "contents") do |form| %>
+  <% if post.errors.any? %>
+    <div id="error_explanation" class="text-red-600 mt-3 text-center">
+        <% post.errors.full_messages.each do |message| %>
+          <p><%= message %></p>
+        <% end %>
+    </div>
+  <% end %>
+
+<div id="image-preview" class="my-5 <%= 'hidden' unless post.image.attached? %>">
+  <div class="w-full aspect-square overflow-hidden bg-gray-200 rounded-md shadow-md">
+    <% if post.image.attached? %>
+      <%= image_tag post.image, class: "w-full h-full object-cover object-center", id: "preview-image" %>
+    <% else %>
+      <img id="preview-image" class="w-full h-full object-cover object-center">
+    <% end %>
+  </div>
+</div>
+
+
+  <div class="my-5">
+    <%= form.textarea :caption,
+    rows: 4,
+    placeholder: "What's on your mind?",
+    class: "block bg-white/5 shadow rounded-md border-none outline-none px-3 py-2 mt-2 w-full placeholder:text-gray-400 text-white resize-none no-scrollbar" %>
+  </div>
+
+  <div class="my-5">
+    <%= form.file_field :image, 
+        class: "block shadow rounded-md bg-white/5 outline-none px-3 py-2 mt-2 w-full",
+        accept: "image/*",
+        onchange: "previewImage(this);" %>
+  </div>
+
+  <div class="w-full">
+    <%= form.submit class: "w-full rounded-md px-3.5 py-2.5 text-black bg-gray-200 hover:bg-gray-300 inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>
+
+<script>
+function previewImage(input) {
+  const previewContainer = document.getElementById('image-preview');
+  const previewImg = document.getElementById('preview-image');
+
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      previewImg.src = e.target.result;
+      previewContainer.classList.remove('hidden');
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  } else {
+    previewImg.src = '';
+    previewContainer.classList.add('hidden');
+  }
+}
+</script>

@@ -1,0 +1,18 @@
+<!-- index.html.erb-->
+<% content_for :title, "Posts" %>
+
+<div class="min-h-[calc(100vh-20vh)] flex flex-col items-center py-6">
+  <h1 class="font-bold text-4xl mb-6">Posts</h1>
+
+  <% if @posts.any? %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-10">
+      <% @posts.each do |post| %>
+        <%= link_to post, class: "post-card bg-white/10 p-4 rounded-lg" do %>
+          <%= render post, caption: truncate(post.caption, length: 90) %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-center my-10">No posts found.</p>
+  <% end %>
+</div>
