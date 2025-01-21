@@ -5,7 +5,7 @@ class PostsController < ApplicationController
 
   # GET /posts or /posts.json
   def index
-    @posts = Post.all
+    @posts = Post.all.order(created_at: :desc)
   end
 
   def my_posts
@@ -29,7 +29,7 @@ class PostsController < ApplicationController
   # POST /posts or /posts.json
   def create
     @post = Post.new(post_params)
-    @post.user = current_user 
+    @post.user = current_user
 
     respond_to do |format|
       if @post.save
@@ -54,9 +54,9 @@ class PostsController < ApplicationController
         format.json { render json: @post.errors, status: :unprocessable_entity }
       end
     end
-  else
+    else
     redirect_to posts_path, alert: "You are not authorized to edit this post."
-  end
+    end
 end
 
   # DELETE /posts/1 or /posts/1.json
@@ -68,18 +68,18 @@ end
       format.html { redirect_to posts_path, status: :see_other, notice: "Post was successfully destroyed." }
       format.json { head :no_content }
     end
-  else
+    else
     redirect_to posts_path, alert: "You are not authorized to delete this post."
+    end
   end
-end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_post
       @post = Post.find(params[:id])
     end
-  
+
     def post_params
       params.require(:post).permit(:caption, :image)
     end
-  end
+end
